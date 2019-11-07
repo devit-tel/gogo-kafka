@@ -2,7 +2,7 @@
 Kafka worker by Sarama (enhance support recovery and retry process)
 
 <p align="center">
-  <a href="https://github.com/devit-tel/gogo-kafka"><img alt="GitHub Actions status" src="https://github.com/actions/toolkit/workflows/go-unit-test/badge.svg"></a>
+  <a href="https://github.com/devit-tel/gogo-kafka"><img alt="GitHub Actions status" src="https://github.com/devit-tel/gogo-kafka/workflows/go-unit-test/badge.svg"></a>
 </p>
 
 ### Run example
