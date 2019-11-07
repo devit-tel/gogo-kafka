@@ -1,6 +1,10 @@
 # gogo-kafka
 Kafka worker by Sarama (enhance support recovery and retry process)
 
+<p align="center">
+  <a href="https://github.com/devit-tel/gogo-kafka"><img alt="GitHub Actions status" src="https://github.com/actions/toolkit/workflows/Test/badge.svg"></a>
+</p>
+
 ### Run example
 Run docker kafka by lenses (http://localhost:3030 user: admin, password: admin)
 ```shell script
@@ -11,8 +15,8 @@ Run docker kafka by lenses (http://localhost:3030 user: admin, password: admin)
 ### Example
 
 ```go
-    // load config
-    config := gk.NewConfig([]string{"localhost:9092"}, "kaenin")
+        // load config
+        config := gk.NewConfig([]string{"localhost:9092"}, "kaenin")
 
 	// create retry manager (inmem)
 	rt := retrymanager.NewInmemManager(3, 2)
@@ -29,7 +33,7 @@ Run docker kafka by lenses (http://localhost:3030 user: admin, password: admin)
 		log.Fatal(err)
 	}
 
-    // set custom recovery when panic
+        // set custom recovery when panic
 	worker.SetPanicHandler(func(err interface{}) {
 		fmt.Println("Error in panic: ", err)
 	})
