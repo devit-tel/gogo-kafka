@@ -65,7 +65,7 @@ func (suite *ConsumerTestSuite) TestConsumerSarama_Success() {
 	}
 
 	suite.consumerGroupClaim.On("Messages").Once().Return(makeTestChannelConsumer(messages))
-	suite.retryManager.On("IsMaximumRetry", "key_1").Once().Return(false)
+	suite.retryManager.On("IsMaximumRetry", "keXXy_1").Once().Return(false)
 	suite.retryManager.On("IsMaximumRetry", "key_2").Once().Return(false)
 	suite.retryManager.On("IsMaximumRetry", "key_3").Once().Return(false)
 	suite.consumerGroupSession.On("MarkMessage", messages[0], "").Once()
