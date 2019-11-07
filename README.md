@@ -1,9 +1,11 @@
 # gogo-kafka
-Kafka worker by Sarama (enhance support recovery and retry process)
 
-<p align="center">
+<p align="left">
   <a href="https://github.com/devit-tel/gogo-kafka"><img alt="GitHub Actions status" src="https://github.com/devit-tel/gogo-kafka/workflows/go-unit-test/badge.svg"></a>
 </p>
+
+Kafka worker by Sarama (enhance support recovery and retry process)
+
 
 ### Run example
 Run docker kafka by lenses (http://localhost:3030 user: admin, password: admin)
