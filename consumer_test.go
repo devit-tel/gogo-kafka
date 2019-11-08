@@ -50,7 +50,7 @@ func makeTestChannelConsumer(messages []*sarama.ConsumerMessage) func() <-chan *
 
 func (suite *ConsumerTestSuite) TestConsumerSarama_Success() {
 	var result string
-	testFunc := func(data []byte) error {
+	testFunc := func(key string, data []byte) error {
 		result = string(data)
 		return nil
 	}
@@ -84,7 +84,7 @@ func (suite *ConsumerTestSuite) TestConsumerSarama_Success() {
 
 func (suite *ConsumerTestSuite) TestConsumerSarama_CustomRecoveryFunc() {
 	var resultData, resultTopic, resultKey, resultPanic string
-	testFunc := func(data []byte) error {
+	testFunc := func(key string, data []byte) error {
 		if string(data) == "data_2" {
 			panic("data_from_panic_handler")
 		}
@@ -135,7 +135,7 @@ func (suite *ConsumerTestSuite) TestConsumerSarama_CustomRecoveryFunc() {
 
 func (suite *ConsumerTestSuite) TestConsumerSarama_ProcessError() {
 	var retryCounter int
-	testFunc := func(data []byte) error {
+	testFunc := func(key string, data []byte) error {
 		if string(data) == "data_1" && retryCounter == 0 {
 			retryCounter += 1
 			return errors.New("test_error")
@@ -169,7 +169,7 @@ func (suite *ConsumerTestSuite) TestConsumerSarama_ProcessError() {
 
 func (suite *ConsumerTestSuite) TestConsumerSarama_MaximumRetryAndSkip() {
 	var retryCounter int
-	testFunc := func(data []byte) error {
+	testFunc := func(key string, data []byte) error {
 		if string(data) == "data_1" && retryCounter == 0 {
 			retryCounter += 1
 			return errors.New("test_error")

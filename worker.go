@@ -11,7 +11,7 @@ import (
 	"github.com/Shopify/sarama"
 )
 
-type WorkerHandler func(data []byte) error
+type WorkerHandler func(key string, data []byte) error
 
 type PanicHandler func(err interface{}, topic, key string, data []byte) error
 

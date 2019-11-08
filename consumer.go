@@ -58,7 +58,7 @@ func (consumer *consumerSarama) ConsumeClaim(session sarama.ConsumerGroupSession
 			continue
 		}
 
-		if err := handler(data); err != nil {
+		if err := handler(key, data); err != nil {
 			consumer.processRetryAndDelay(key)
 			return err
 		}
