@@ -13,6 +13,8 @@ import (
 
 type WorkerHandler func(data []byte) error
 
+type PanicHandler func(err interface{}, topic, key string, data []byte) error
+
 type Worker struct {
 	topicNames []string
 	consumer   *consumerSarama
@@ -45,7 +47,7 @@ func (worker *Worker) SetLogger(logger *log.Logger) {
 	sarama.Logger = logger
 }
 
-func (worker *Worker) SetPanicHandler(recover func(err interface{})) {
+func (worker *Worker) SetPanicHandler(recover PanicHandler) {
 	worker.consumer.panicHandler = recover
 }
 

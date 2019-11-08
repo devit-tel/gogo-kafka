@@ -8,7 +8,7 @@ type consumerSarama struct {
 	ready        chan bool
 	handlers     map[string]WorkerHandler
 	retryManager RetryProcess
-	panicHandler func(err interface{})
+	panicHandler PanicHandler
 }
 
 func (consumer *consumerSarama) Setup(sarama.ConsumerGroupSession) error {
@@ -21,7 +21,8 @@ func (consumer *consumerSarama) Cleanup(sarama.ConsumerGroupSession) error {
 }
 
 func (consumer *consumerSarama) ConsumeClaim(session sarama.ConsumerGroupSession, claim sarama.ConsumerGroupClaim) error {
-	var key string
+	var key, topic string
+	var data []byte
 
 	// Testing will be not panic. please ignore comment this defer func before testing
 	defer func() {
@@ -29,7 +30,10 @@ func (consumer *consumerSarama) ConsumeClaim(session sarama.ConsumerGroupSession
 			// check is panic handler exist
 			if consumer.panicHandler != nil {
 				// call panic handler for manage panic
-				consumer.panicHandler(panicErr)
+				errPanicHandler := consumer.panicHandler(panicErr, topic, key, data)
+				if errPanicHandler != nil {
+					panic(errPanicHandler)
+				}
 			}
 
 			if key != "" {
@@ -40,8 +44,10 @@ func (consumer *consumerSarama) ConsumeClaim(session sarama.ConsumerGroupSession
 
 	for message := range claim.Messages() {
 		key = string(message.Key)
+		topic = message.Topic
+		data = message.Value
 
-		handler, isExist := consumer.handlers[message.Topic]
+		handler, isExist := consumer.handlers[topic]
 		if !isExist {
 			session.MarkMessage(message, "")
 			continue
@@ -52,7 +58,7 @@ func (consumer *consumerSarama) ConsumeClaim(session sarama.ConsumerGroupSession
 			continue
 		}
 
-		if err := handler(message.Value); err != nil {
+		if err := handler(data); err != nil {
 			consumer.processRetryAndDelay(key)
 			return err
 		}

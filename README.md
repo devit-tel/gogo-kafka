@@ -8,7 +8,7 @@ Kafka worker by Sarama (enhance support recovery and retry process)
 ### Run example
 Run docker kafka by lenses (http://localhost:3030 user: admin, password: admin)
 ```shell script
-    docker run -e ADV_HOST=127.0.0.1 -e EULA="https://dl.lenses.io/d/?id=8914c158-2090-4132-b00a-ebc3175800c0" --rm -p  3030:3030 -p 9092:9092 lensesio/box
+    docker run -e ADV_HOST=127.0.0.1 -e EULA="https://dl.lenses.io/d/?id=XXXXXXXXXXXXX" --rm -p  3030:3030 -p 9092:9092 lensesio/box
 ```
 
 
