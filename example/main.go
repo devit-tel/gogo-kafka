@@ -42,8 +42,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	worker.SetPanicHandler(func(err interface{}) {
-		fmt.Println("Error in panic: ", err)
+	worker.SetPanicHandler(func(err interface{}, topic, key string, data []byte) error {
+		fmt.Println("Panic from: ", err)
+		fmt.Printf("Debug data: %s %s - %s", topic, key, string(data))
+		return nil
 	})
 
 	// register method

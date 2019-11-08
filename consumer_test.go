@@ -2,6 +2,7 @@ package gogo_kafka
 
 import (
 	"errors"
+	"fmt"
 	"testing"
 
 	"github.com/Shopify/sarama"
@@ -82,16 +83,20 @@ func (suite *ConsumerTestSuite) TestConsumerSarama_Success() {
 }
 
 func (suite *ConsumerTestSuite) TestConsumerSarama_CustomRecoveryFunc() {
-	var result string
+	var resultData, resultTopic, resultKey, resultPanic string
 	testFunc := func(data []byte) error {
-		if string(data) == "data_1" {
-			panic("panic on data_1")
+		if string(data) == "data_2" {
+			panic("data_from_panic_handler")
 		}
 		return nil
 	}
 
-	panicFunc := func(err interface{}) {
-		result = "data_from_panic_handler"
+	panicFunc := func(err interface{}, topic, key string, data []byte) error {
+		resultData = string(data)
+		resultTopic = topic
+		resultKey = key
+		resultPanic = fmt.Sprintf("%v", err)
+		return nil
 	}
 
 	// Map topic to handler
@@ -106,13 +111,22 @@ func (suite *ConsumerTestSuite) TestConsumerSarama_CustomRecoveryFunc() {
 	}
 
 	suite.consumerGroupClaim.On("Messages").Once().Return(makeTestChannelConsumer(messages))
+
+	// Lap: 1
 	suite.retryManager.On("IsMaximumRetry", "key_1").Once().Return(false)
-	suite.retryManager.On("AddRetryCount", "key_1").Once().Return(3)
-	suite.retryManager.On("IsMaximumRetry", "key_1").Once().Return(true)
+	suite.consumerGroupSession.On("MarkMessage", messages[0], "").Once()
+
+	// Lap: 2
+	suite.retryManager.On("IsMaximumRetry", "key_2").Once().Return(false)
+	suite.retryManager.On("AddRetryCount", "key_2").Once().Return(3)
+	suite.retryManager.On("IsMaximumRetry", "key_2").Once().Return(true)
 
 	err := suite.consumer.ConsumeClaim(suite.consumerGroupSession, suite.consumerGroupClaim)
 	suite.NoError(err)
-	suite.Equal("data_from_panic_handler", result)
+	suite.Equal("data_2", resultData)
+	suite.Equal("testTopic", resultTopic)
+	suite.Equal("key_2", resultKey)
+	suite.Equal("data_from_panic_handler", resultPanic)
 
 	suite.retryManager.AssertExpectations(suite.T())
 	suite.consumerGroupClaim.AssertExpectations(suite.T())
