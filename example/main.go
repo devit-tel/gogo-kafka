@@ -9,9 +9,8 @@ import (
 	"github.com/devit-tel/gogo-kafka/retrymanager"
 )
 
-func testFunc(data []byte) error {
-	fmt.Println("Handler trigger")
-	fmt.Println(string(data))
+func testFunc(key string, data []byte) error {
+	fmt.Println("KEY: ", key, " - DATA: ", string(data))
 	if string(data) == "error_1" {
 		return errors.New("sample_error")
 	}
