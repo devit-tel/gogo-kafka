@@ -6,8 +6,9 @@ import (
 	"testing"
 
 	"github.com/Shopify/sarama"
-	"github.com/devit-tel/gogo-kafka/mocks"
 	"github.com/stretchr/testify/suite"
+
+	"github.com/devit-tel/gogo-kafka/mocks"
 )
 
 type ConsumerTestSuite struct {
@@ -192,6 +193,7 @@ func (suite *ConsumerTestSuite) TestConsumerSarama_MaximumRetryAndSkip() {
 	suite.retryManager.On("IsMaximumRetry", "key_1").Once().Return(true)
 	suite.retryManager.On("IsMaximumRetry", "key_2").Once().Return(false)
 	suite.retryManager.On("IsMaximumRetry", "key_3").Once().Return(false)
+	suite.retryManager.On("ClearRetryCount", "key_1").Once()
 
 	suite.consumerGroupSession.On("MarkMessage", messages[0], "").Once()
 	suite.consumerGroupSession.On("MarkMessage", messages[1], "").Once()

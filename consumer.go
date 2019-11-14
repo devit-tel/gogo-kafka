@@ -54,8 +54,8 @@ func (consumer *consumerSarama) ConsumeClaim(session sarama.ConsumerGroupSession
 		}
 
 		if consumer.retryManager.IsMaximumRetry(key) {
-			session.MarkMessage(message, "")
 			consumer.retryManager.ClearRetryCount(key)
+			session.MarkMessage(message, "")
 			continue
 		}
 
