@@ -9,15 +9,28 @@ import (
 	"github.com/devit-tel/gogo-kafka/retrymanager"
 )
 
-func testFunc(key string, data []byte) error {
-	fmt.Println("KEY: ", key, " - DATA: ", string(data))
+func testFuncNaruto(key string, data []byte) error {
+	fmt.Println("NARUTO -> KEY: ", key, " - DATA: ", string(data))
 	if string(data) == "error_1" {
 		return errors.New("sample_error")
 	}
 
-	if string(data) == "panic_1" {
-		panic("sample_error")
-	}
+	// if string(data) == "panic_1" {
+	// 	panic("sample_error")
+	// }
+
+	return nil
+}
+
+func testFuncSasuke(key string, data []byte) error {
+	fmt.Println("SASUKE -> KEY: ", key, " - DATA: ", string(data))
+	// if string(data) == "error_1" {
+	// 	return errors.New("sample_error")
+	// }
+
+	// if string(data) == "panic_1" {
+	// 	panic("sample_error")
+	// }
 
 	return nil
 }
@@ -48,7 +61,8 @@ func main() {
 	})
 
 	// register method
-	worker.RegisterHandler("konohax", testFunc)
+	worker.RegisterHandler("top_naruto", testFuncNaruto)
+	worker.RegisterHandler("top_sasuke", testFuncSasuke)
 
 	// start worker
 	worker.Start()
