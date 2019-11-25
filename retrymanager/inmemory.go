@@ -25,7 +25,7 @@ func (rm *InmemManager) AddRetryCount(key string) int {
 	}
 
 	rm.data[key] = value + 1
-	return 0
+	return value + 1
 }
 
 func (rm *InmemManager) GetRetryCount(key string) int {
